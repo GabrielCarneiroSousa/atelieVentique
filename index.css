@@ -1,0 +1,429 @@
+/* ==========================================================================
+   Ateliê Ventique
+   Ideia: papel de molde, fita métrica e o azul do palco.
+   Cores tiradas da logo e das fotos reais do ateliê.
+   ========================================================================== */
+:root {
+  --tinta: #101b33;
+  --marinho: #14274e;
+  --palco: #2d49a6;
+  --fita: #f2c230;
+  --molde: #d4bf95;
+  --papel: #f4f6f9;
+  --branco: #ffffff;
+  --suave: #4a5675;
+
+  --fonte-titulo: "Young Serif", Georgia, serif;
+  --fonte-texto: "Hanken Grotesk", system-ui, sans-serif;
+
+  --fita-altura: 22px;
+  --topo-altura: 72px;
+  --largura: 1180px;
+  --espaco-secao: clamp(64px, 9vw, 120px);
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--fita-altura) + var(--topo-altura) + 12px);
+}
+
+body {
+  padding-top: var(--fita-altura);
+  font-family: var(--fonte-texto);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--tinta);
+  background: var(--papel);
+  -webkit-font-smoothing: antialiased;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+ul, ol { list-style: none; }
+a { color: inherit; }
+
+h1, h2, h3 {
+  font-family: var(--fonte-titulo);
+  font-weight: 400;
+  line-height: 1.12;
+  color: var(--marinho);
+  text-wrap: balance;
+}
+
+p { max-width: 62ch; color: var(--suave); }
+
+:focus-visible { outline: 3px solid var(--palco); outline-offset: 3px; }
+
+.sr {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+.pular {
+  position: absolute; left: 16px; top: -80px; z-index: 100;
+  padding: 10px 16px; background: var(--marinho); color: var(--branco);
+}
+.pular:focus { top: calc(var(--fita-altura) + 8px); }
+
+.miolo { width: 100%; max-width: var(--largura); margin: 0 auto; padding: 0 24px; }
+
+/* ---------- Fita métrica (acompanha a rolagem) ---------- */
+.fita {
+  position: fixed; inset: 0 0 auto 0; z-index: 70;
+  height: var(--fita-altura);
+  background-color: var(--fita);
+  background-image:
+    linear-gradient(to right, var(--marinho) 1px, transparent 1px),
+    linear-gradient(to right, var(--marinho) 1px, transparent 1px);
+  background-size: 8px 6px, 40px 11px;
+  background-repeat: repeat-x;
+  background-position: left bottom, left bottom;
+  pointer-events: none;
+}
+.fita__agulha {
+  position: absolute; top: 0; left: 0; height: 100%; width: 3px;
+  background: var(--marinho);
+  transform: translateX(var(--x, 0px));
+}
+.fita__valor {
+  position: absolute; top: 0; bottom: 0; left: 3px;
+  display: flex; align-items: center; padding: 0 8px;
+  font-size: 0.72rem; font-weight: 700; line-height: 1;
+  color: var(--fita); background: var(--marinho);
+  white-space: nowrap;
+}
+.fita__agulha.fita__agulha--fim .fita__valor { left: auto; right: 3px; }
+
+/* ---------- Topo ---------- */
+.topo {
+  position: sticky; top: var(--fita-altura); z-index: 60;
+  background: rgba(244, 246, 249, 0.94);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(20, 39, 78, 0.12);
+}
+.topo__interno {
+  max-width: var(--largura); margin: 0 auto; padding: 0 24px;
+  min-height: var(--topo-altura);
+  display: flex; align-items: center; gap: 28px;
+}
+.marca { display: flex; align-items: center; gap: 12px; text-decoration: none; margin-right: auto; }
+.marca img { border-radius: 8px; }
+.marca__nome { font-family: var(--fonte-titulo); font-size: 1.25rem; color: var(--marinho); }
+
+.menu__lista { display: flex; gap: 26px; }
+.menu__lista a {
+  text-decoration: none; font-weight: 500; font-size: 0.97rem; color: var(--tinta);
+  padding: 6px 0; background: linear-gradient(var(--marinho), var(--marinho)) left bottom / 0 2px no-repeat;
+  transition: background-size 0.25s ease;
+}
+.menu__lista a:hover { background-size: 100% 2px; }
+
+.topo__botao {
+  display: none; font: inherit; font-weight: 600; color: var(--marinho);
+  background: none; border: 2px solid var(--marinho); padding: 8px 16px; cursor: pointer;
+}
+
+/* ---------- Botões e links ---------- */
+.botao {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 14px 26px; font: inherit; font-weight: 600; font-size: 1rem; line-height: 1.2;
+  text-decoration: none; cursor: pointer; border: 2px solid transparent;
+  border-radius: 999px;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease, scale 160ms var(--ease-out);
+}
+.botao--escuro { background: var(--marinho); color: var(--branco); }
+.botao--escuro:hover { background: var(--palco); }
+.botao--claro { background: var(--fita); color: var(--tinta); }
+.botao--claro:hover { background: var(--branco); }
+.botao--cheio { width: 100%; }
+.topo__cta { padding: 10px 20px; font-size: 0.95rem; }
+
+.link {
+  font-weight: 600; color: var(--marinho);
+  text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px;
+  text-decoration-color: var(--fita);
+}
+.link:hover { text-decoration-color: var(--marinho); }
+
+/* ---------- Seções ---------- */
+.secao { padding: var(--espaco-secao) 0; }
+.secao--azul { background: var(--marinho); }
+.secao--molde { background: var(--molde); }
+.secao__titulo { font-size: clamp(1.9rem, 3.6vw, 2.9rem); margin-bottom: 20px; }
+
+/* ---------- Início ---------- */
+.inicio { padding: clamp(24px, 4vw, 56px) 24px 0; }
+.inicio__grade {
+  max-width: var(--largura); margin: 0 auto;
+  display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: center;
+}
+.papel {
+  position: relative; z-index: 2; margin-right: -64px;
+  padding: clamp(32px, 5vw, 76px);
+  background: var(--molde);
+}
+.papel::before {
+  content: ""; position: absolute; inset: 14px;
+  border: 2px dashed rgba(16, 27, 51, 0.4);
+  pointer-events: none;
+}
+.papel__titulo { position: relative; font-size: clamp(2.4rem, 5.4vw, 4.7rem); color: var(--marinho); margin-bottom: 24px; }
+.papel__texto { position: relative; font-size: 1.2rem; color: var(--tinta); margin-bottom: 32px; }
+.papel__acoes { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin-bottom: 36px; }
+.papel__rodape { position: relative; font-size: 0.95rem; color: var(--tinta); }
+
+.inicio__foto { position: relative; z-index: 1; }
+.inicio__foto img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; object-position: center top; }
+.inicio__foto figcaption, .trabalho figcaption { font-size: 0.92rem; color: var(--suave); }
+.inicio__foto figcaption { padding-top: 10px; }
+
+/* ---------- Trabalhos ---------- */
+.trabalhos {
+  display: grid; gap: 28px; align-items: start;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 40px;
+}
+.trabalho img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
+.trabalho figcaption { padding-top: 12px; max-width: 42ch; }
+.trabalho figcaption strong { display: block; font-family: var(--fonte-titulo); font-weight: 400; font-size: 1.2rem; color: var(--marinho); }
+.trabalhos__chamada {
+  align-self: center;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 20px;
+}
+.trabalhos__chamada p { font-size: 1.15rem; color: var(--tinta); }
+
+/* ---------- Serviços ---------- */
+.servicos { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: clamp(32px, 6vw, 88px); align-items: start; }
+.servicos__intro { position: sticky; top: calc(var(--fita-altura) + var(--topo-altura) + 32px); }
+.servicos__intro .secao__titulo { color: var(--branco); }
+.servicos__intro p { color: rgba(255, 255, 255, 0.78); }
+.servico {
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  padding: 26px 0; border-bottom: 1px dashed rgba(255, 255, 255, 0.35);
+}
+.servico:first-child { padding-top: 0; }
+.servico h3 { font-size: 1.45rem; color: var(--branco); margin-bottom: 6px; }
+.servico p { color: rgba(255, 255, 255, 0.75); font-size: 1rem; }
+.servico__link {
+  flex-shrink: 0; font-weight: 600; color: var(--fita); text-decoration: underline;
+  text-underline-offset: 5px; text-decoration-thickness: 2px;
+}
+.servico__link:hover { color: var(--branco); }
+
+/* ---------- Como funciona ---------- */
+.etapas {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px;
+  margin-top: 44px; counter-reset: etapa;
+}
+.etapa { position: relative; padding-top: 28px; border-top: 2px dashed rgba(16, 27, 51, 0.5); counter-increment: etapa; }
+.etapa::before {
+  content: counter(etapa);
+  position: absolute; top: -17px; left: 0;
+  width: 32px; height: 32px; display: grid; place-items: center;
+  font-family: var(--fonte-titulo); font-size: 1.05rem;
+  color: var(--molde); background: var(--marinho); border-radius: 50%;
+}
+.etapa h3 { font-size: 1.3rem; margin-bottom: 8px; }
+.etapa p { color: var(--tinta); font-size: 1rem; }
+
+/* ---------- Sobre ---------- */
+.sobre { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(32px, 6vw, 88px); align-items: center; }
+.sobre__fotos { position: relative; padding-bottom: 18%; }
+.sobre__foto img { width: 100%; object-fit: cover; }
+.sobre__foto--a { width: 78%; }
+.sobre__foto--a img { aspect-ratio: 4 / 3; }
+.sobre__foto--b { position: absolute; right: 0; bottom: 0; width: 56%; border: 8px solid var(--papel); }
+.sobre__foto--b img { aspect-ratio: 3 / 2; }
+.sobre__texto p + p { margin-top: 18px; }
+
+/* ---------- Medidas ---------- */
+.medidas { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(32px, 6vw, 88px); align-items: start; }
+.medidas__intro .secao__titulo { color: var(--branco); }
+.medidas__intro p { color: rgba(255, 255, 255, 0.78); margin-bottom: 28px; }
+.medida { border-bottom: 1px solid rgba(255, 255, 255, 0.25); }
+.medida:first-child { border-top: 1px solid rgba(255, 255, 255, 0.25); }
+.medida summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 18px 0; cursor: pointer; list-style: none;
+  font-family: var(--fonte-titulo); font-size: 1.3rem; color: var(--branco);
+}
+.medida summary::-webkit-details-marker { display: none; }
+.medida summary::after { content: "+"; font-family: var(--fonte-texto); font-size: 1.6rem; color: var(--fita); line-height: 1; transition: transform 260ms var(--ease-out); }
+.medida[open] summary::after { transform: rotate(45deg); }
+.medida summary:focus-visible { outline-color: var(--fita); }
+.medida p { padding-bottom: 20px; color: rgba(255, 255, 255, 0.8); font-size: 1rem; }
+
+/* ---------- Aviso ---------- */
+.aviso { background: var(--fita); padding: clamp(36px, 5vw, 56px) 0; }
+.aviso__interno { display: flex; align-items: center; justify-content: space-between; gap: 24px 48px; flex-wrap: wrap; }
+.aviso__titulo { font-size: clamp(1.5rem, 2.6vw, 2.1rem); margin-bottom: 8px; }
+.aviso p { color: var(--tinta); }
+
+/* ---------- Contato ---------- */
+.contato { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(32px, 6vw, 88px); align-items: start; }
+.dados { margin-top: 32px; display: grid; gap: 22px; }
+.dados dt { font-weight: 700; color: var(--marinho); margin-bottom: 2px; }
+.dados dd { color: var(--tinta); }
+
+.formulario { background: var(--branco); padding: clamp(24px, 4vw, 44px); border-top: 6px solid var(--marinho); box-shadow: 0 1px 0 rgba(20, 39, 78, 0.12); }
+.formulario__titulo { font-size: 1.7rem; margin-bottom: 8px; }
+.formulario__texto { font-size: 0.97rem; margin-bottom: 24px; }
+.campo { margin-bottom: 18px; }
+.campo label { display: block; font-weight: 600; font-size: 0.95rem; margin-bottom: 6px; color: var(--tinta); }
+.campo input, .campo textarea {
+  width: 100%; font: inherit; color: var(--tinta);
+  padding: 12px 14px; background: var(--papel);
+  border: 2px solid rgba(20, 39, 78, 0.25); border-radius: 4px;
+}
+.campo input:focus-visible, .campo textarea:focus-visible { outline: 3px solid var(--palco); outline-offset: 1px; border-color: var(--palco); }
+.campo textarea { resize: vertical; min-height: 110px; }
+.campo--invalido input, .campo--invalido textarea { border-color: #b3261e; }
+.campo__erro { min-height: 0; margin-top: 6px; font-size: 0.9rem; color: #b3261e; }
+.campo__erro:empty { display: none; }
+.armadilha { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.formulario__status { margin-top: 14px; font-size: 0.95rem; color: var(--marinho); }
+.formulario__status:empty { display: none; }
+
+/* ---------- Rodapé ---------- */
+.rodape { background: var(--tinta); padding: 56px 0 40px; }
+.rodape__interno { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px; }
+.rodape__nome { font-family: var(--fonte-titulo); font-size: 1.7rem; color: var(--branco); }
+.rodape__lema, .rodape__copia { color: rgba(255, 255, 255, 0.65); font-size: 0.95rem; }
+.rodape__social { margin-top: 14px; color: rgba(255, 255, 255, 0.85); font-size: 1rem; }
+.rodape__social a { color: var(--fita); font-weight: 600; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 5px; }
+.rodape__social a:hover { color: var(--branco); }
+.rodape__social a:focus-visible { outline-color: var(--fita); }
+
+/* ==========================================================================
+   Responsivo
+   ========================================================================== */
+@media (max-width: 1000px) {
+  .inicio__grade { grid-template-columns: 1fr; }
+  .papel { margin-right: 0; }
+  .inicio__foto { max-width: 460px; margin: -32px 24px 0 auto; }
+  .trabalhos { grid-template-columns: 1fr 1fr; }
+  .trabalhos__chamada { grid-column: 1 / -1; }
+  .servicos, .medidas, .contato, .sobre { grid-template-columns: 1fr; }
+  .servicos__intro { position: static; }
+  .etapas { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 28px; }
+  .sobre__fotos { order: 2; }
+}
+
+@media (max-width: 820px) {
+  :root { --topo-altura: 64px; }
+  .topo__botao { display: block; }
+  .topo__cta { display: none; }
+  .menu {
+    position: absolute; top: 100%; left: 0; right: 0;
+    background: var(--papel); border-bottom: 1px solid rgba(20, 39, 78, 0.12);
+    padding: 8px 24px 20px; display: none;
+  }
+  .menu.menu--aberto { display: block; }
+  .menu__lista { flex-direction: column; gap: 0; }
+  .menu__lista a { display: block; padding: 14px 0; font-size: 1.1rem; background-image: none; border-bottom: 1px dashed rgba(20, 39, 78, 0.25); }
+}
+
+@media (max-width: 560px) {
+  body { font-size: 1rem; }
+  .marca__nome { font-size: 1.1rem; }
+  .inicio { padding-left: 0; padding-right: 0; }
+  .inicio__foto { margin-right: 16px; }
+  .trabalhos { grid-template-columns: 1fr; }
+  .servico { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .etapas { grid-template-columns: 1fr; }
+  .botao { width: 100%; }
+  .papel__acoes { flex-direction: column; align-items: stretch; text-align: center; }
+  .aviso__interno .botao { width: 100%; }
+}
+
+
+
+/* ---------- Página 404 ---------- */
+body.pagina-simples { padding-top: 0; }
+.topo--simples { top: 0; }
+.papel--erro { margin-right: 0; max-width: 760px; }
+
+/* ==========================================================================
+   Movimento (v2): mesmas ideias da loja Use Lari's, adaptadas ao molde e à fita.
+   Regras: só transform/opacity, curvas fortes, <300 ms na interface,
+   hover só em ponteiro fino, nada se mexe com "reduzir movimento".
+   ========================================================================== */
+
+/* Resposta ao toque */
+.botao, .servico__link, .topo__botao, .link { transition-property: background-color, color, border-color, text-decoration-color, scale; transition-duration: 160ms; transition-timing-function: var(--ease-out); }
+.botao:active, .topo__botao:active { scale: 0.97; }
+.botao { will-change: auto; }
+
+/* Cabeçalho ganha profundidade ao rolar */
+.topo { transition: box-shadow 240ms var(--ease-out), background-color 240ms var(--ease-out); }
+.topo--rolou { box-shadow: 0 10px 24px -18px rgba(16, 27, 51, 0.55); background: rgba(244, 246, 249, 0.98); }
+
+/* Menu: seção atual fica sublinhada */
+.menu__lista a[aria-current="true"] { background-size: 100% 2px; }
+
+/* Entrada da primeira dobra (só com JS) */
+.js .papel__titulo .pal { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: 0.12em; margin-bottom: -0.12em; }
+.js .papel__titulo .pal > span, .js .secao__titulo .pal > span { display: inline-block; will-change: transform; }
+.js .secao__titulo .pal { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: 0.12em; margin-bottom: -0.12em; }
+.js .inicio .papel__texto, .js .inicio .papel__acoes, .js .inicio .papel__rodape { opacity: 0; transform: translateY(14px); animation: aparece 700ms var(--ease-out) forwards; }
+.js .inicio .papel__texto { animation-delay: 520ms; }
+.js .inicio .papel__acoes { animation-delay: 620ms; }
+.js .inicio .papel__rodape { animation-delay: 720ms; }
+.js .inicio__foto { overflow: hidden; clip-path: inset(0 0 100% 0); animation: cortina 1000ms var(--ease-in-out) 150ms forwards; }
+.js .inicio__foto img { scale: 1.12; animation: assenta 1400ms var(--ease-out) 150ms forwards; will-change: transform; }
+@keyframes aparece { to { opacity: 1; transform: none; } }
+@keyframes cortina { to { clip-path: inset(0 0 0 0); } }
+@keyframes assenta { to { scale: 1; } }
+
+/* Revelar ao rolar, em sequência (cada item usa --i) */
+.js .revela { opacity: 0; transform: translateY(18px); transition: opacity 560ms var(--ease-out), transform 560ms var(--ease-out); transition-delay: calc(var(--i, 0) * 70ms); }
+.js .revela.revela--on { opacity: 1; transform: none; }
+
+/* Trabalhos: moldura recorta o zoom, brilho segue o ponteiro */
+.moldura { position: relative; overflow: hidden; }
+.moldura img { transition: transform 520ms var(--ease-out); will-change: auto; }
+.moldura::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity 240ms var(--ease-out); background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 30%), rgba(255, 255, 255, 0.34), transparent 62%); }
+
+/* Serviços: seta que corre e linha que acende */
+.servico { transition: padding-left 260ms var(--ease-out), border-color 260ms var(--ease-out); }
+.servico__link::after { content: " \2192"; display: inline-block; transition: transform 220ms var(--ease-out); }
+
+/* Etapas: o número "assenta" quando a etapa entra */
+.etapa::before { transition: transform 420ms var(--ease-out); }
+.js .etapa.revela:not(.revela--on)::before { transform: scale(0.6); }
+
+/* Medidas: abre e fecha com suavidade (onde o navegador suporta) */
+.medida::details-content { block-size: 0; overflow: clip; transition: block-size 260ms var(--ease-out), content-visibility 260ms allow-discrete; }
+.medida[open]::details-content { block-size: auto; }
+@supports (interpolate-size: allow-keywords) { :root { interpolate-size: allow-keywords; } }
+
+/* Formulário: erros e status entram suaves */
+.campo__erro, .formulario__status { animation: aparece 220ms var(--ease-out) both; }
+.campo input, .campo textarea { transition: border-color 160ms ease, box-shadow 160ms ease; }
+
+/* Botões que puxam levemente (translate individual, não briga com o scale do :active) */
+.botao { translate: var(--tx, 0px) var(--ty, 0px); }
+
+@media (hover: hover) and (pointer: fine) {
+  .botao--escuro:hover { background: var(--palco); }
+  .servico:hover { padding-left: 12px; border-bottom-color: rgba(255, 255, 255, 0.7); }
+  .servico:hover .servico__link::after { transform: translateX(5px); }
+  .trabalho:hover .moldura img { transform: scale(1.05); }
+  .trabalho:hover .moldura::after { opacity: 1; }
+}
+@media (hover: none) {
+  .botao--escuro:hover { background: var(--marinho); }
+  .botao--claro:hover { background: var(--fita); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  .js .revela, .js .inicio .papel__texto, .js .inicio .papel__acoes, .js .inicio .papel__rodape { opacity: 1; transform: none; }
+  .js .inicio__foto { clip-path: none; }
+  .js .inicio__foto img { scale: 1; }
+}
